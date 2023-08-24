@@ -18,6 +18,6 @@ dependencies {
 
 javadoc {
   options.links(
-    "https://jd.papermc.io/paper/1.15"
+          "https://javadoc.io/doc/cn.powernukkitx/powernukkitx/latest/index.html"
   )
 }

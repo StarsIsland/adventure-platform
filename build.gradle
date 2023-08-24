@@ -9,6 +9,7 @@ plugins {
   id 'net.kyori.indra.publishing.sonatype' version "$indraVersion"
   id 'net.kyori.indra.licenser.spotless' version "$indraVersion" apply false
   id 'net.kyori.indra.crossdoc' version "$indraVersion" apply false
+  id 'maven-publish'
 }
 
 // Adventure version
@@ -71,6 +72,9 @@ subprojects {
   }
 
   indra {
+
+    publishAllTo('mavenLocal', new File(System.getProperty('user.home'), '.m2/repository').toURI().toString())
+
     javaVersions {
       testWith(8, 11, 17)
     }
@@ -103,6 +107,10 @@ subprojects {
 
           developer {
             id = 'Electroid'
+          }
+
+          developer {
+            id = 'Peng_Lx'
           }
         }
       }
