@@ -27,6 +27,7 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.CommandSender;
 
+import cn.nukkit.command.utils.RawText;
 import cn.nukkit.lang.TextContainer;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.permission.PermissionChecker;
@@ -91,7 +92,11 @@ public class StarkkitFacet <V extends CommandSender> extends FacetBase<V> {
 
         @Override
         public void sendMessage(@NotNull Player viewer, @NotNull Identity source, @NotNull TextContainer message, @NotNull Object type) {
-            viewer.sendMessage(message);
+            if(message.getText().contains("rawtext")) {
+                viewer.sendRawTextMessage(RawText.fromRawText(message.getText()));
+            } else {
+                viewer.sendMessage(message);
+            }
         }
     }
 
