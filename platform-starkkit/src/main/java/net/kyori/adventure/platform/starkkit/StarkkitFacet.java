@@ -29,12 +29,16 @@ import cn.nukkit.command.CommandSender;
 
 import cn.nukkit.lang.TextContainer;
 import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.permission.PermissionChecker;
 import net.kyori.adventure.platform.facet.Facet;
 import net.kyori.adventure.platform.facet.FacetBase;
 import net.kyori.adventure.platform.facet.FacetComponentFlattener;
+import net.kyori.adventure.platform.facet.FacetPointers;
+import net.kyori.adventure.pointer.Pointers;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.flattener.ComponentFlattener;
 import net.kyori.adventure.text.serializer.starkkit.StarkkitComponentSerializer;
+import net.kyori.adventure.util.TriState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -99,6 +103,34 @@ public class StarkkitFacet <V extends CommandSender> extends FacetBase<V> {
         }
     }
 
+    static final class CommandSenderPointers extends StarkkitFacet<CommandSender> implements Facet.Pointers<CommandSender> {
+        CommandSenderPointers() {
+            super(CommandSender.class);
+        }
 
+        @Override
+        public void contributePointers(final CommandSender viewer, final net.kyori.adventure.pointer.Pointers.Builder builder) {
+            builder.withDynamic(Identity.NAME, viewer::getName);
+
+            builder.withStatic(PermissionChecker.POINTER, perm -> viewer.hasPermission(perm) ? TriState.TRUE : TriState.FALSE);
+            if (!(viewer instanceof Player)) {
+                builder.withStatic(FacetPointers.TYPE, viewer == Server.getInstance().getConsoleSender() ? FacetPointers.Type.CONSOLE : FacetPointers.Type.OTHER);
+            }
+        }
+    }
+
+    static final class PlayerPointers extends StarkkitFacet<Player> implements Facet.Pointers<Player> {
+        PlayerPointers() {
+            super(Player.class);
+        }
+
+        @Override
+        public void contributePointers(final Player viewer, final net.kyori.adventure.pointer.Pointers.Builder builder) {
+            builder.withDynamic(Identity.UUID, viewer::getUniqueId);
+            builder.withDynamic(Identity.LOCALE, viewer::getLocale);
+            builder.withDynamic(FacetPointers.SERVER, () -> viewer.getServer().getName());
+            builder.withStatic(FacetPointers.TYPE, FacetPointers.Type.PLAYER);
+        }
+    }
 
 }

@@ -39,7 +39,12 @@ final class StarkkitAudience extends FacetAudience<CommandSender> {
   private static final Collection<Facet.ActionBar<Player, ?>> ACTION_BAR = Facet.of(
           StarkkitFacet.ActionBar::new);
 
+  private static final Collection<Facet.Pointers<? extends CommandSender>> POINTERS = Facet.of(
+          StarkkitFacet.CommandSenderPointers::new,
+          StarkkitFacet.PlayerPointers::new
+  );
+
   StarkkitAudience(@NotNull FacetAudienceProvider provider, @NotNull Collection<? extends CommandSender> viewers) {
-    super(provider, viewers, CHAT, ACTION_BAR , null, null, null, null, null, null, null);
+    super(provider, viewers, CHAT, ACTION_BAR , null, null, null, null, null, null, POINTERS);
   }
 }
