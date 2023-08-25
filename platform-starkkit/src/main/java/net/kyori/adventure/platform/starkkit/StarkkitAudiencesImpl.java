@@ -103,8 +103,9 @@ public class StarkkitAudiencesImpl extends FacetAudienceProvider<CommandSender, 
             return this;
         }
 
+        @NotNull
         @Override
-        public StarkkitAudiences.@NotNull Builder partition(final @NotNull Function<Pointered, ?> partitionFunction) {
+        public StarkkitAudiences.Builder partition(final @NotNull Function<Pointered, ?> partitionFunction) {
             requireNonNull(partitionFunction, "partitionFunction"); // unused
             return this;
         }
