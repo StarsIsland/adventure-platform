@@ -77,8 +77,6 @@ public class StarkkitAudiencesImpl extends FacetAudienceProvider<CommandSender, 
     StarkkitAudiencesImpl(final Plugin plugin, final @NotNull ComponentRenderer<Pointered> componentRenderer) {
         super(componentRenderer);
         this.plugin = requireNonNull(plugin, "plugin");
-        this.listener = new Listener();
-        this.plugin.getServer().getPluginManager().registerEvents(this.listener, this.plugin);
 
         final CommandSender console = this.plugin.getServer().getConsoleSender();
         this.addViewer(console);
@@ -86,6 +84,9 @@ public class StarkkitAudiencesImpl extends FacetAudienceProvider<CommandSender, 
         for (final Player player : this.plugin.getServer().getOnlinePlayers().values()) {
             this.addViewer(player);
         }
+
+        this.listener = new Listener();
+        this.plugin.getServer().getPluginManager().registerEvents(this.listener, this.plugin);
     }
 
     static final class Builder implements StarkkitAudiences.Builder {
@@ -123,7 +124,7 @@ public class StarkkitAudiencesImpl extends FacetAudienceProvider<CommandSender, 
 
     @Override
     protected @NotNull StarkkitAudience createAudience(@NotNull Collection<CommandSender> viewers) {
-        return null;
+        return new StarkkitAudience(this, viewers);
     }
 
     @Override
@@ -138,7 +139,7 @@ public class StarkkitAudiencesImpl extends FacetAudienceProvider<CommandSender, 
 
     @Override
     public void close() {
-        INSTANCES.remove(this.plugin, plugin.getDescription().getName());
+        INSTANCES.remove(this.plugin.getName());
         super.close();
     }
 
